@@ -1,0 +1,17 @@
+{
+  "selected": {
+    "low_source": "score",
+    "high_source": "fixed10"
+  },
+  "csls_rule": {
+    "mode": "both",
+    "low": 0.25,
+    "high": 0.4
+  },
+  "graph_policy": {
+    "action": "both",
+    "count": 1,
+    "fraction": 0.5
+  },
+  "neighbor_fraction": 0.004574565416285453
+}

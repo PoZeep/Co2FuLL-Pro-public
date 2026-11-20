@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "co2full-pro"
+version = "1.0.0"
+description = "Co2FuLL-Pro: Resource-Aware Binary Code Similarity Detection with Evidence-Guided LLM Verification"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+co2full-assets = "co2full.cli:assets_main"
+co2full-doctor = "co2full.cli:doctor_main"
+co2full-data = "co2full.cli:data_main"
+co2full-extract = "co2full.cli:extract_main"
+co2full-features = "co2full.cli:features_main"
+co2full-java = "co2full.java_runtime:main"
+co2full-services = "co2full.cli:services_main"
+co2full-route = "co2full.cli:route_main"
+co2full-fewshot = "co2full.cli:fewshot_main"
+co2full-postverify = "co2full.cli:postverify_main"
+co2full-evaluate = "co2full.cli:evaluate_main"
+co2full-inspect = "co2full.cli:inspect_main"
+co2full-audit = "co2full.cli:audit_main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+co2full = ["resources/*.json", "_engine/**/*.py"]

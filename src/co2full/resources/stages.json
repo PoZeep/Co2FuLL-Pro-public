@@ -1,0 +1,210 @@
+[
+  {
+    "order": 1,
+    "stage": "compile",
+    "family": "①",
+    "gate_summary": "few-shot=NO，且M1允许compile",
+    "prompt_variant": "原完整A/B；COMPILE_V2，无few-shot示例",
+    "source": "subtasks/methods.py"
+  },
+  {
+    "order": 2,
+    "stage": "reason107",
+    "family": "①",
+    "gate_summary": "本轮compile=NO",
+    "prompt_variant": "原代码＋本轮原few-shot reason；old_reason_compile",
+    "source": "scripts/run_xm_prefilter_v100.py"
+  },
+  {
+    "order": 3,
+    "stage": "type117",
+    "family": "①",
+    "gate_summary": "原few-shot=NO，M1为density_weak，reason命中类型／签名／offset等词",
+    "prompt_variant": "旧few-shot reason＋COMPILE_V2；control_1",
+    "source": "subtasks/representation_review_v115.py"
+  },
+  {
+    "order": 4,
+    "stage": "type120",
+    "family": "①",
+    "gate_summary": "type117新判YES",
+    "prompt_variant": "交换A/B；不带旧reason；blind_reverse_1",
+    "source": "subtasks/confirmation_v119.py"
+  },
+  {
+    "order": 5,
+    "stage": "flow121",
+    "family": "①",
+    "gate_summary": "原few-shot=NO，M1为density_weak；不命中类型词但命中控制流词",
+    "prompt_variant": "旧few-shot reason＋原代码；reason_raw_1",
+    "source": "subtasks/control_flow_rescue_v121.py"
+  },
+  {
+    "order": 6,
+    "stage": "flow_confirm121",
+    "family": "①",
+    "gate_summary": "flow121新判YES",
+    "prompt_variant": "交换A/B的原代码；reason_confirm_1",
+    "source": "subtasks/control_flow_rescue_v121.py"
+  },
+  {
+    "order": 7,
+    "stage": "positive124",
+    "family": "③",
+    "gate_summary": "属于compile候选，当前为YES",
+    "prompt_variant": "reason107或compile的本轮reason＋原代码；review_1→control_1",
+    "source": "subtasks/compile_positive_repeat_v124.py"
+  },
+  {
+    "order": 8,
+    "stage": "control134",
+    "family": "①",
+    "gate_summary": "初始compile=NO且当前仍NO；两侧Ghidra视图和共同预算可用",
+    "prompt_variant": "只输入原IDA代码；control_raw_1",
+    "source": "subtasks/dual_remaining_v134.py"
+  },
+  {
+    "order": 9,
+    "stage": "control_confirm134",
+    "family": "①",
+    "gate_summary": "control134新判YES",
+    "prompt_variant": "交换A/B；仍只输入原IDA代码；control_confirm_1",
+    "source": "subtasks/dual_remaining_v134.py"
+  },
+  {
+    "order": 10,
+    "stage": "expanded181",
+    "family": "①",
+    "gate_summary": "strategy087当前model NO；M1为density_weak，双分数≥0，终止于fewshot/type117/flow121",
+    "prompt_variant": "原代码独立COMPILE_V2，不带旧reason",
+    "source": "scripts/run_background_cold_v181.py"
+  },
+  {
+    "order": 11,
+    "stage": "tree_raw182",
+    "family": "②",
+    "gate_summary": "当前model NO；M1为density_weak或adaptive_allows_compile；双分数≥0；双侧ctree可用",
+    "prompt_variant": "原代码＋与代码严格匹配的ctree；tree/raw",
+    "source": "scripts/run_background_tree_v182.py"
+  },
+  {
+    "order": 12,
+    "stage": "tree_confirm182",
+    "family": "②",
+    "gate_summary": "tree_raw182新判YES",
+    "prompt_variant": "交换A/B的原代码COMPILE_V2，不带ctree或旧reason；tree/confirm",
+    "source": "scripts/run_background_tree_v182.py"
+  },
+  {
+    "order": 13,
+    "stage": "tree_double182",
+    "family": "②",
+    "gate_summary": "tree_confirm182仍YES",
+    "prompt_variant": "再次执行同一交换视角的原代码COMPILE_V2，不带ctree；tree/double",
+    "source": "scripts/run_background_tree_v182.py"
+  },
+  {
+    "order": 14,
+    "stage": "plain183",
+    "family": "①",
+    "gate_summary": "tree_raw182曾YES，但当前被确认步骤判NO",
+    "prompt_variant": "回到原代码COMPILE_V2",
+    "source": "scripts/run_stable_pipeline_v203.py"
+  },
+  {
+    "order": 15,
+    "stage": "data184",
+    "family": "②",
+    "gate_summary": "物理／表达式事实可用；当前model NO，或存在只读索引表事实",
+    "prompt_variant": "原代码＋实际提取的返回表达式／只读表事实；data",
+    "source": "subtasks/grounded_facts_v184.py"
+  },
+  {
+    "order": 16,
+    "stage": "role186",
+    "family": "③",
+    "gate_summary": "当前model YES，且strategy087时为NO",
+    "prompt_variant": "当前正向reason、方向及可用事实；输入／输出角色核验；role",
+    "source": "subtasks/recovered_positive_v186.py"
+  },
+  {
+    "order": 17,
+    "stage": "plain188",
+    "family": "①",
+    "gate_summary": "role186=NO；地址／步长条件事实可提取且共同预算允许",
+    "prompt_variant": "仅原代码COMPILE_V2；plain，不喂地址说明",
+    "source": "subtasks/address_facts_v188.py"
+  },
+  {
+    "order": 18,
+    "stage": "reconcile191",
+    "family": "①",
+    "gate_summary": "当前model NO；旧reason尾部存在编译解释与NO的特定矛盾表达",
+    "prompt_variant": "原代码＋实际reason及方向；reconcile",
+    "source": "subtasks/reason_consistency_v191.py"
+  },
+  {
+    "order": 19,
+    "stage": "idiom194",
+    "family": "①",
+    "gate_summary": "当前model NO；完整代码触发规定的编译习惯模式",
+    "prompt_variant": "原代码＋候选编译解释／常量记法；idiom",
+    "source": "subtasks/compiler_idioms_v194.py"
+  },
+  {
+    "order": 20,
+    "stage": "compact195",
+    "family": "②",
+    "gate_summary": "snapshot194时model NO；具数值／拆字线索，ARM32LE匿名helper的有限执行证据可用",
+    "prompt_variant": "原代码＋已观测helper算术／ABI包；compact",
+    "source": "subtasks/helper_observations_v195.py"
+  },
+  {
+    "order": 21,
+    "stage": "compact_confirm195",
+    "family": "②",
+    "gate_summary": "compact195新判YES",
+    "prompt_variant": "交换A/B及证据所属侧；compact_confirm",
+    "source": "subtasks/helper_observations_v195.py"
+  },
+  {
+    "order": 22,
+    "stage": "plain199",
+    "family": "③",
+    "gate_summary": "snapshot194时model YES；两侧可见已知操作集合不同；共同预算允许",
+    "prompt_variant": "仅原代码COMPILE_V2；plain，不喂额外事实或旧reason",
+    "source": "subtasks/library_effects_v199.py"
+  },
+  {
+    "order": 23,
+    "stage": "plain_confirm199",
+    "family": "③",
+    "gate_summary": "plain199新判NO",
+    "prompt_variant": "交换A/B原代码，允许重新YES；plain/confirm",
+    "source": "subtasks/library_effects_v199.py"
+  },
+  {
+    "order": 24,
+    "stage": "history_negative_v011",
+    "family": "Post-Verification",
+    "gate_summary": "Current model NO with explicit compilation/source-origin tension in the actual latest explanation.",
+    "prompt_variant": "Complete code and initial/latest-opposite/latest judgment history.",
+    "source": "subtasks/final_refinement_v011.py"
+  },
+  {
+    "order": 25,
+    "stage": "contrast_positive_v011",
+    "family": "Post-Verification",
+    "gate_summary": "Post-promoted YES with another currently accepted candidate supported by CSS or original Pre-Verification.",
+    "prompt_variant": "Complete query/target/other code, ELF header facts, frozen original few-shot references.",
+    "source": "subtasks/final_refinement_v011.py"
+  },
+  {
+    "order": 26,
+    "stage": "history_api_v011",
+    "family": "Post-Verification",
+    "gate_summary": "Post-promoted YES with known API asymmetry, two final YES judgments and an unswapped latest review.",
+    "prompt_variant": "Complete code and actual history; verify operation correspondence.",
+    "source": "subtasks/final_refinement_v011.py"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "python": "3.10.13",
+  "packages": {
+    "torch": "2.3.0",
+    "vllm": "0.5.1",
+    "transformers": "4.42.4",
+    "tokenizers": "0.19.1",
+    "numpy": "1.26.3",
+    "triton": "2.3.0",
+    "xformers": "0.0.26.post1",
+    "vllm-flash-attn": "2.5.9"
+  }
+}

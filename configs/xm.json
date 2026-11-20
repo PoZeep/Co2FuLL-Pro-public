@@ -1,0 +1,31 @@
+{
+  "schema": "co2full-machine-v1",
+  "assets": "../work/xm",
+  "model": "../work/models/Qwen2.5-7B-Instruct",
+  "python": "../.venv/bin/python",
+  "java": "../.venv/bin/co2full-java",
+  "java_backend": "/path/to/jdk17/bin/java",
+  "probe_python": "../.venv/bin/python",
+  "hermes_python": "/path/to/hermes-environment/bin/python",
+  "hermes_root": "/path/to/HermesSim",
+  "hermes_checkpoint": "/path/to/checkpoint_19.pt",
+  "ida": "/path/to/ida/idat",
+  "ida_pythonpath": "/path/to/ida-python-deps",
+  "service_dir": "../work/services",
+  "native_gpus": [
+    0,
+    1,
+    2
+  ],
+  "long_gpu": 3,
+  "native_ports": [
+    8171,
+    8172,
+    8173
+  ],
+  "long_port": 8074,
+  "variant": "full",
+  "execution": "single-gpu",
+  "gpu": 0,
+  "hermes_vocabulary": "/path/to/hermes-vocabulary.json"
+}
